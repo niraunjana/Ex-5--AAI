@@ -12,59 +12,49 @@ Step 3: For each measurement, predict the next state using kf.predict().<BR>
 Step 4: Update the state estimate based on the measurement using kf.update().<BR>
 Step 5: Store the estimated state in a list.<BR>
 Step 6: Plot the true and estimated positions.<BR>
+
 <H3>Program:</H3>
+
 ```
-import numpy as np
+import random
+import string
+def generate_random_solution(answer):
+    l=len(answer)
+    return [random.choice(string.printable) for _ in range(l)]
+def evaluate(solution,answer):
+    print(solution)
+    target=list(answer)
+    diff=0
+    for i in range(len(target)):
+        s=solution[i]
+        t=target[i]
+        diff +=abs(ord(s)-ord(t))
+    return diff
+def mutate_solution(solution):
+    ind=random.randint(0,len(solution)-1)
+    solution[ind]=random.choice(string.printable)
+    return solution
+def SimpleHillClimbing():
+    answer="Artificial Intelligence"
+    best=generate_random_solution(answer)
+    best_score=evaluate(best,answer)
+    while True:
+        print("Score:",best_score," Solution : ","".join(best))  
+        if best_score==0:
+            break
+        new_solution=mutate_solution(list(best))
+        score=evaluate(new_solution,answer)   
+        if score<best_score:
+            best=new_solution
+            best_score=score
+#answer="Artificial Intelligence"
+#print(generate_random_solution(answer))
+#solution=generate_random_solution(answer)
+#print(evaluate(solution,answer))
+SimpleHillClimbing()
 
-class KalmanFilter:
-  def __init__(self,F,H,Q,R,x0,P0):
-    self.F=F
-    self.H=H
-    self.Q=Q
-    self.R=R
-    self.X=x0
-    self.P=P0
-
-  def predict(self):
-    self.X=np.dot(self.F,self.X)
-    self.P=np.dot(np.dot(self.F,self.P),self.F.T)+self.Q
-
-  def update(self,z):
-    y=z-np.dot(self.H,self.X)
-    S=np.dot(np.dot(self.H,self.P),self.H.T)+self.R
-    K=np.dot(np.dot(self.P,self.H.T),np.linalg.inv(S))
-    self.X=self.X+np.dot(K,y)
-    self.P=np.dot(np.eye(self.F.shape[0])-np.dot(K,self.H),self.P)
-
-dt=0.1
-F=np.array([[1,dt],[0,1]])
-H=np.array([[1,0]])
-Q=np.diag([0.1,0.1])
-R=np.array([[1]])
-x0=np.array([0,0])
-P0=np.diag([1,1])
-
-kf=KalmanFilter(F,H,Q,R,x0,P0)
-
-true_states=[]
-measurements=[]
-for i in range(100):
-  true_states.append([i*dt,1])
-  measurements.append(i*dt+np.random.normal(scale=1))
-
-est_states=[]
-for z in measurements:
-  kf.predict()
-  kf.update(np.array([z]))
-  est_states.append(kf.X)
-
-import matplotlib.pyplot as plt
-plt.plot([s[0] for s in true_states],label='true')
-plt.plot([s[0] for s in est_states],label='estimate')
-plt.legend
-plt.show()
 ```
-
+  
 <H3>Output:</H3>
 
 ![313912311-5e47e0d0-a568-4e15-899d-c3f8ad42e0fe](https://github.com/niraunjana/Ex-5--AAI/assets/119395610/1b34f8b0-d644-4674-9533-28d687ea4de6)
