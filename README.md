@@ -52,8 +52,8 @@ def SimpleHillClimbing():
 #solution=generate_random_solution(answer)
 #print(evaluate(solution,answer))
 SimpleHillClimbing()
-
 ```
+
   
 <H3>Output:</H3>
 
